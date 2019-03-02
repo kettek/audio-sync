@@ -1,0 +1,169 @@
+:root {
+  --fg-default: rgba(170,187,221,0.5);
+  --fg-hover: rgba(68,136,170,0.5);
+  --bg-default: rgba(255,255,255,0.5);
+  --bg-hover: rgba(240,240,240,0.5);
+  --bg-active: rgba(224,224,224,0.5);
+  --play-default: rgba(100,180,100,0.25);
+  --play-hover: rgba(100,180,100,0.50);
+  --play-active: rgba(100,180,100,0.75);
+  --stop-default: rgba(180,100,100,0.25);
+  --stop-hover: rgba(180,100,100,0.50);
+  --stop-active: rgba(180,100,100,0.75);
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("fonts/Rubik-Regular.ttf");
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  font-family: "Rubik";
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+input, button {
+  font-family: "Rubik";
+}
+
+.vertical {
+  width: 2em;
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+}
+
+button {
+  border: 1px solid var(--bg-default);
+  background: var(--fg-default);
+  border-radius: 4px;
+}
+button:focus { outline:0; }
+button:hover {
+  border: 1px solid var(--fg-hover);
+  background-color: var(--bg-hover);
+}
+button:active { 
+  background-color: var(--bg-active);
+}
+
+.off {
+  background-color: var(--bg-active);
+}
+
+.audioGroups {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  flex: 1;
+}
+
+.audioGroup .tracks {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1vmin;
+  flex: 1;
+}
+
+.audioGroup {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  padding: .25em;
+  margin: 1vmin;
+}
+.audioGroup:before { /* type icon */
+  position: absolute;
+  z-index: -100;
+  top: 0; left: 0;
+  font-size: 4vh;
+  opacity: 0.1;
+}
+
+.audioGroup.edit {
+  flex-direction: column;
+}
+
+.audioGroup .controls {
+  display: flex;
+}
+
+.audioGroup .controls input {
+  flex: 1;
+}
+
+.soundboard {
+  border: 1px solid var(--fg-default);
+  border-radius: 8px;
+}
+.soundboard:before {
+  content: '\1F509';
+}
+
+.soundboard .track {
+  display: flex;
+}
+.soundboard.edit .track {
+  flex: 1;
+  width: auto; height: auto;
+}
+.soundboard.edit .track button {
+  border-left: 0;
+}
+.soundboard .track.use {
+  height: 12vmin;
+  width: 12vmin;
+  padding: 1vmin;
+  margin: 1vmin;
+  border-radius: 5vmin;
+  border: 1px solid var(--fg-default);
+  background-color: var(--bg-default);
+}
+.soundboard .track.use:hover {
+  border-color: var(--fg-hover);
+  background-color: var(--bg-hover);
+}
+.soundboard .track.use:active { 
+  background-color: var(--bg-active);
+}
+.soundboard .track.use button {
+  flex: 1;
+  font-size: inherit;
+  word-break: break-all;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.playlist {
+  flex-direction: column;
+}
+
+.playlist:before {
+  content: '\1F3B5';
+}
+
+.playlist .tracks .track.playing {
+  color: #ff00ff;
+}
