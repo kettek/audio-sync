@@ -251,7 +251,7 @@ const audioSyncClient = (function() {
       let player = document.createElement('audio');
       player.src = msg.track;
       player.autoplay = false;
-      player.preload = 'auto';
+      player.preload = 'metadata';
       player.volume = getTrackVolume(msg.group, msg.track_id);
       player.addEventListener('ended', function() {
         onPlayerEnded(msg.group, msg.track_id);
