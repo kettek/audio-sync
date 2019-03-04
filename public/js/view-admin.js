@@ -21,11 +21,7 @@ window.addEventListener('load', function(e) {
         ] : [
           m('button', {
             onclick: function(e) {
-              let section = window.location.pathname.lastIndexOf('/');
-              if (section >= 0) {
-                let room = window.location.pathname.substring(section+1);
-                audioSyncClient.connect("ws://" + window.location.host + "/l/" + room);
-              }
+              audioSyncClient.connect("wss://" + window.location.host + window.location.pathname)
             }
           }, 'Connect')
         ])
@@ -251,7 +247,17 @@ window.addEventListener('load', function(e) {
             audioSyncClient.send({cmd: "stopTrack", group: item.attrs.group, track_id: item.attrs.track_id});
             audioSyncClient.send({cmd: "removeTrack", group: item.attrs.group, track_id: item.attrs.track_id});
           }
-        }, 'X')
+        }, 'X'),
+	(audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT ? 
+          m('input[type=range]', {
+            min: 1,
+            max: 100,
+            value: audioSyncClient.mGroups[item.attrs.group].tracks[item.attrs.track_id].volume * 100,
+            onchange: function(e) {
+              audioSyncClient.send({cmd: "setVolume", group: item.attrs.group, track_id: item.attrs.track_id, volume: Number(e.target.value) / 100});
+            }
+          })
+	  : null)
       ])
     }
   }

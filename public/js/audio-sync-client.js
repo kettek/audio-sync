@@ -5,7 +5,7 @@ const audioSyncClient = (function() {
   let mMasterVolume = 0.5;
   let mLocalVolume  = 0.5;
 
-  function connect(url = "ws://"+window.location.host+"/l/123") {
+  function connect(url = "wss://"+window.location.host+"/l/123") {
     mUrl = url;
     if (mConnection !== null) {
       mConnection.close();
@@ -90,6 +90,7 @@ const audioSyncClient = (function() {
       if (!mGroups[msg.group]) return;
       let track = mGroups[msg.group].tracks[msg.track_id];
       if (!track || !track.player || !track.player.player) return;
+      track.player.stop(track.player.player);
       track.player.resume(track.player.player);
     } else if (msg.cmd === 'pauseTrack') {
       try {

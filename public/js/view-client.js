@@ -23,11 +23,7 @@ window.addEventListener('load', function(e) {
         ] : [
           m('button', {
             onclick: function(e) {
-              let section = window.location.pathname.lastIndexOf('/');
-              if (section >= 0) {
-                let room = window.location.pathname.substring(section+1);
-                audioSyncClient.connect("ws://" + window.location.host + "/l/" + room);
-              }
+              audioSyncClient.connect("wss://" + window.location.host + window.location.pathname)
             }
           }, 'Connect')
         ])

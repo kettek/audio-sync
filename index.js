@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const rExpress      = require('express'),
       rHttp         = require('http'),
       rUrl          = require('url'),
@@ -11,7 +13,7 @@ app.use(rExpress.static('public'));
 
 let rooms = {};
 
-app.ws('/l/:id', (ws, req) => {
+function handleWebsocket(ws, req) {
   const roomId = req.params.id;
   console.log('room id: ' + roomId);
   console.log(req.params);
@@ -120,7 +122,9 @@ app.ws('/l/:id', (ws, req) => {
       ws.send(JSON.stringify(rooms[roomId].audioGroups[gid]));
     }
   }, 0);
-});
+}
+app.ws('/l/:id', handleWebsocket);
+app.ws('/a/:id', handleWebsocket);
 
 const keepAliveInterval = setInterval(() => {
   expressWs.getWss().clients.forEach(ws => {
@@ -142,20 +146,29 @@ app.get('/a/:id', (req, res) => {
 app.listen(8081);
 
 function exitHandler(options, exitCode) {
+  console.log("Quitting.");
   if (options.cleanup) {
-    Object.keys(rooms).forEach(function(room_id) {
-      let obj = {
-        audioGroups: rooms[room_id].audioGroups,
-        volume: rooms[room_id].volume
-      }
-      rFS.writeFileSync(rPath.join("db", room_id+".json"), JSON.stringify(obj));
-    });
-	}
+    cleanupHandler();
+  }
   if (exitCode || exitCode === 0) console.log(exitCode);
   if (options.exit) process.exit();
 }
 
+function cleanupHandler() {
+  Object.keys(rooms).forEach(function(room_id) {
+    console.log("Saving " + room_id);
+    let obj = {
+      audioGroups: rooms[room_id].audioGroups,
+      volume: rooms[room_id].volume
+    }
+    rFS.writeFileSync(rPath.join("db", room_id+".json"), JSON.stringify(obj));
+  });
+  rooms = {}
+  process.exit();
+}
+
 process.on('exit', exitHandler.bind(null, { cleanup: true }));
+process.on('SIGTERM', cleanupHandler);
 process.on('SIGINT', exitHandler.bind(null, { exit: true }));
 process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
