@@ -8,7 +8,7 @@ window.addEventListener('load', function(e) {
   const mode = M_USE;
   const viewAdmin = {
     view: () => {
-      return m('.main', 
+      return m('.main.admin', 
         (audioSyncClient.isConnected
         ? [
           m('h1', 'Admin Section'),

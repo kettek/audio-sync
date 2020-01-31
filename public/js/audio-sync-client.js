@@ -199,6 +199,8 @@ const audioSyncClient = (function() {
 
   function onPlayerEnded(group, track_id) {
     if (mGroups[group].type == 'Soundboard') return;
+    let track = mGroups[group].tracks[track_id];
+    if (track) track.isPlaying = false
     // This is inefficient to recalculate every time, but I don't care.
     let sorted_tracks = Object.keys(mGroups[group].tracks);
     sorted_tracks.sort(function(a,b) {
