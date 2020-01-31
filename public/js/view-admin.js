@@ -235,14 +235,14 @@ window.addEventListener('load', function(e) {
         ),
         m('.tracks', Object.keys(item.attrs.tracks).map(key => {
           let track = item.attrs.tracks[key];
-          return m(viewAdminPlaylistTrack, Object.assign({group: item.attrs.group, track_id: key, track: track.track, title: track.title}))
+          return m(viewAdminPlaylistTrack, Object.assign({group: item.attrs.group, track_id: key, track: track.track, title: track.title, isPlaying: track.isPlaying }))
         }))
       ])
     }
   }
   const viewAdminPlaylistTrack = {
     view: (item) => {
-      return m('.track' + (item.attrs.track_id == audioSyncClient.mGroups[item.attrs.group].current_track ? '.playing' : ''), [
+      return m('.track' + (item.attrs.isPlaying ? '.playing' : ''), [
 	      (audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT ? 
           [m('button', {onclick: function(e) {
             audioSyncClient.send({

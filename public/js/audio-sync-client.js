@@ -91,17 +91,26 @@ const audioSyncClient = (function() {
       if (!mGroups[msg.group]) return;
       let track = mGroups[msg.group].tracks[msg.track_id];
       if (!track || !track.player || !track.player.player) return;
+      track.isPlaying = true
       track.player.stop(track.player.player);
       track.player.resume(track.player.player);
     } else if (msg.cmd === 'pauseTrack') {
       try {
         let track = mGroups[msg.group].tracks[msg.track_id];
         track.player.pause(track.player.player);
+        track.isPlaying = false
       } catch (e) { return }
     } else if (msg.cmd === 'stopTrack') {
       try {
         let track = mGroups[msg.group].tracks[msg.track_id];
+        track.isPlaying = false
         track.player.stop(track.player.player);
+      } catch (e) { return }
+    } else if (msg.cmd === 'currentTrack') {
+      try {
+        let track = mGroups[msg.group].tracks[msg.track_id];
+        track.isPlaying = true
+        console.log(mGroups[msg.group])
       } catch (e) { return }
     } else if (msg.cmd === 'setVolume') {
       try {
@@ -218,6 +227,7 @@ const audioSyncClient = (function() {
     if (mGroups[group].type == 'Soundboard') return;
     if (!audioSyncClient.isAdmin) return;
     // FIXME: Only send this if this client is an admin
+    console.log(mGroups[group].tracks[track_id])
     send({cmd: "currentTrack", group: group, track_id: track_id});
   }
 
