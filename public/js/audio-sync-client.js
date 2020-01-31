@@ -52,7 +52,7 @@ const audioSyncClient = (function() {
       if (msg.tracks) {
         for (key in msg.tracks) {
           let track = msg.tracks[key];
-          mGroups[msg.group].tracks[key] = { player: createPlaybackItem({group: msg.group, track: track.track, track_id: track.track_id}), track: track.track, volume: track.volume };
+          mGroups[msg.group].tracks[key] = { player: createPlaybackItem({group: msg.group, track: track.track, track_id: track.track_id}), track: track.track, title: track.title, volume: track.volume };
         }
       } else {
         msg.tracks = {};
@@ -77,10 +77,11 @@ const audioSyncClient = (function() {
       if (msg.autoplay !== undefined) mGroups[msg.group].autoplay = msg.autoplay
       if (msg.shuffle !== undefined) mGroups[msg.group].shuffle = msg.shuffle
       if (msg.loop !== undefined) mGroups[msg.group].loop = msg.loop
+      if (msg.title !== undefined) mGroups[msg.group].title = msg.title
     } else if (msg.cmd === 'addTrack') {
       if (!msg.group || !msg.track_id) return;
       if (!mGroups[msg.group]) return;
-      mGroups[msg.group].tracks[msg.track_id] = { player: createPlaybackItem({group: msg.group, track: msg.track, track_id: msg.track_id}), track: msg.track, volume: msg.volume };
+      mGroups[msg.group].tracks[msg.track_id] = { player: createPlaybackItem({group: msg.group, track: msg.track, track_id: msg.track_id}), track: msg.track, title: msg.title, volume: msg.volume };
     } else if (msg.cmd === 'removeTrack') {
       if (!msg.group || !msg.track_id) return;
       if (!mGroups[msg.group]) return;

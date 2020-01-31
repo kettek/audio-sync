@@ -77,9 +77,10 @@ window.addEventListener('load', function(e) {
               m('button', {onclick: function(e) {
                 audioSyncClient.mGroups[item.attrs.group].mode = M_USE;
               }}, '\u2714\uFE0F'),
-              m('input.add'),
+              m('input.track'),
+              m('input.title'),
               m('button', {onclick: function(e) {
-                audioSyncClient.send({cmd: "addTrack", group: item.attrs.group, track_id: new Date(), track: e.target.previousSibling.value, volume: 1.0});
+                audioSyncClient.send({cmd: "addTrack", group: item.attrs.group, track_id: new Date(), title: e.target.previousSibling.value, track: e.target.previousSibling.previousSibling.value, volume: 1.0});
               }}, '\u2795'),
               m('button', {onclick: function(e) {
                 audioSyncClient.send({cmd: "removeGroup", group: item.attrs.group });
@@ -101,7 +102,7 @@ window.addEventListener('load', function(e) {
         )
         , m('.tracks', Object.keys(item.attrs.tracks).map(key => {
           let track = item.attrs.tracks[key];
-          return m(viewAdminSoundboardTrack, Object.assign({isPlaying: track.isPlaying, group: item.attrs.group, track_id: key, track: track.track}))
+          return m(viewAdminSoundboardTrack, Object.assign({isPlaying: track.isPlaying, group: item.attrs.group, track_id: key, track: track.track, title: track.title}))
         }))
       ])
     }
@@ -121,7 +122,7 @@ window.addEventListener('load', function(e) {
       if (audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT) {
         return m('.track.edit', [
           m('input', {
-            value: item.attrs.track,
+            value: item.attrs.title?item.attrs.title:item.attrs.track,
             onchange: function(e) {
               audioSyncClient.send({cmd: "addTrack", group: item.attrs.group, track_id: item.attrs.track_id, track: e.target.value, volume: 1.0});
             }
@@ -171,23 +172,39 @@ window.addEventListener('load', function(e) {
   const viewAdminPlaylist = {
     view: (item) => {
       return m('.audioGroup.playlist'+(audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT ? '.edit' : ''), [
+        m('.title',
+          (audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT 
+            ? [
+                m('input', {
+                  value: audioSyncClient.mGroups[item.attrs.group].title||'',
+                  onchange: function(e) {
+                    audioSyncClient.send({cmd: "setGroup", group: item.attrs.group, title: e.target.value });
+                  }
+                }),
+                m('button', {onclick: function(e) {
+                  audioSyncClient.mGroups[item.attrs.group].mode = M_USE;
+                }}, '\u2714\uFE0F')
+              ]
+            : [
+                m('span', audioSyncClient.mGroups[item.attrs.group].title||''),
+                m('button', {onclick: function(e) {
+                  audioSyncClient.mGroups[item.attrs.group].mode = M_EDIT;
+                }}, '\u270F\uFE0F')
+              ]
+          )
+        ),
         m('.controls',
           (audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT
             ? [
+              m('input.track'),
+              m('input.title'),
               m('button', {onclick: function(e) {
-                audioSyncClient.mGroups[item.attrs.group].mode = M_USE;
-              }}, '\u2714\uFE0F'),
-              m('input.add'),
-              m('button', {onclick: function(e) {
-                audioSyncClient.send({cmd: "addTrack", group: item.attrs.group, track_id: new Date(), track: e.target.previousSibling.value, volume: 1.0});
+                audioSyncClient.send({cmd: "addTrack", group: item.attrs.group, track_id: new Date(), title: e.target.previousSibling.value, track: e.target.previousSibling.previousSibling.value, volume: 1.0});
               }}, '\u2795'),
               m('button', {onclick: function(e) {
                 audioSyncClient.send({cmd: "removeGroup", group: item.attrs.group });
               }}, '\uD83D\uDDD1'),
             ] : [
-              m('button', {onclick: function(e) {
-                audioSyncClient.mGroups[item.attrs.group].mode = M_EDIT;
-              }}, '\u270F\uFE0F'),
               m('button' + (!audioSyncClient.mGroups[item.attrs.group].autoplay ? '.off' : ''), {
                 onclick: function(e) {
                   console.log(audioSyncClient.mGroups[item.attrs.group].autoplay)
@@ -218,7 +235,7 @@ window.addEventListener('load', function(e) {
         ),
         m('.tracks', Object.keys(item.attrs.tracks).map(key => {
           let track = item.attrs.tracks[key];
-          return m(viewAdminPlaylistTrack, Object.assign({group: item.attrs.group, track_id: key, track: track.track}))
+          return m(viewAdminPlaylistTrack, Object.assign({group: item.attrs.group, track_id: key, track: track.track, title: track.title}))
         }))
       ])
     }
@@ -226,7 +243,23 @@ window.addEventListener('load', function(e) {
   const viewAdminPlaylistTrack = {
     view: (item) => {
       return m('.track' + (item.attrs.track_id == audioSyncClient.mGroups[item.attrs.group].current_track ? '.playing' : ''), [
-        m('label', item.attrs.track ),
+	      (audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT ? 
+          [m('button', {onclick: function(e) {
+            audioSyncClient.send({
+              cmd: "addTrack",
+              group: item.attrs.group,
+              track_id: item.attrs.track_id,
+              track: e.target.nextSibling.value,
+              title: e.target.nextSibling.nextSibling.value
+            });
+          }}, '\u2714\uFE0F'),
+          m('input.track', {
+            value: item.attrs.track
+          }),
+          m('input.name', {
+            value: item.attrs.title?item.attrs.title:item.attrs.track
+          })]
+        : m('label', item.attrs.title?item.attrs.title:item.attrs.track )),
         m('button.play', {
           onclick: function(e) {
             audioSyncClient.send({cmd: "playTrack", group: item.attrs.group, track_id: item.attrs.track_id});

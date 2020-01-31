@@ -41,7 +41,7 @@ function handleWebsocket(ws, req) {
 
     if (msg.cmd === 'addGroup') {
       if (!msg.group) return;
-      rooms[roomId].audioGroups[msg.group] = Object.assign({settings: {}, tracks: {}, volume: 1.0}, msg);
+      rooms[roomId].audioGroups[msg.group] = Object.assign({settings: {}, tracks: {}, volume: 1.0, title: ""}, msg);
     } else if (msg.cmd === 'removeGroup') {
       if (!msg.group) return;
       if (!rooms[roomId].audioGroups[msg.group]) return;
@@ -52,8 +52,10 @@ function handleWebsocket(ws, req) {
       if (msg.autoplay !== undefined) rooms[roomId].audioGroups[msg.group].autoplay = msg.autoplay;
       if (msg.shuffle !== undefined) rooms[roomId].audioGroups[msg.group].shuffle = msg.shuffle;
       if (msg.loop !== undefined) rooms[roomId].audioGroups[msg.group].loop = msg.loop;
+      if (msg.title !== undefined) rooms[roomId].audioGroups[msg.group].title = msg.title;
     } else if (msg.cmd === 'addTrack') {
       if (!msg.group || !msg.track_id || !msg.track) return;
+      msg.title = msg.title || decodeURIComponent(msg.track.substring(msg.track.lastIndexOf("/")+1));
       if (!rooms[roomId].audioGroups[msg.group]) rooms[roomId].audioGroups[msg.group] = {settings: {}, tracks: {}, volume: 1.0};
       rooms[roomId].audioGroups[msg.group].tracks[msg.track_id] = Object.assign({volume: 1.0}, msg);
     } else if (msg.cmd === 'removeTrack') {

@@ -74,12 +74,18 @@ button:active {
   flex: 1;
 }
 
+.audioGroup > .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .audioGroup .tracks {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   padding: 1vmin;
   flex: 1;
 }
