@@ -3,7 +3,7 @@ window.addEventListener('load', function(e) {
   //audioSyncClient.connect();
   const viewClient = {
     view: () => {
-      return m('.main', 
+      return m('.main.client', 
         (audioSyncClient.isConnected
         ? [
           m('h1', 'Client Section'),

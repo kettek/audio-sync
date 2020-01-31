@@ -260,27 +260,29 @@ window.addEventListener('load', function(e) {
             value: item.attrs.title?item.attrs.title:item.attrs.track
           })]
         : m('label', item.attrs.title?item.attrs.title:item.attrs.track )),
-        m('button.play', {
-          onclick: function(e) {
-            audioSyncClient.send({cmd: "playTrack", group: item.attrs.group, track_id: item.attrs.track_id});
-          }
-        }, m.trust('&#9654;')),
-        m('button.pause', {
-          onclick: function(e) {
-            audioSyncClient.send({cmd: "pauseTrack", group: item.attrs.group, track_id: item.attrs.track_id});
-          }
-        }, m.trust('&#9646;&#9646;')),
-        m('button.stop', {
-          onclick: function(e) {
-            audioSyncClient.send({cmd: "stopTrack", group: item.attrs.group, track_id: item.attrs.track_id});
-          }
-        }, m.trust('&#9726;'))
-        , m('button.remove', {
-          onclick: function(e) {
-            audioSyncClient.send({cmd: "stopTrack", group: item.attrs.group, track_id: item.attrs.track_id});
-            audioSyncClient.send({cmd: "removeTrack", group: item.attrs.group, track_id: item.attrs.track_id});
-          }
-        }, 'X'),
+        m('.controls', [
+          m('button.play', {
+            onclick: function(e) {
+              audioSyncClient.send({cmd: "playTrack", group: item.attrs.group, track_id: item.attrs.track_id});
+            }
+          }, m.trust('&#9654;')),
+          m('button.pause', {
+            onclick: function(e) {
+              audioSyncClient.send({cmd: "pauseTrack", group: item.attrs.group, track_id: item.attrs.track_id});
+            }
+          }, m.trust('&#9646;&#9646;')),
+          m('button.stop', {
+            onclick: function(e) {
+              audioSyncClient.send({cmd: "stopTrack", group: item.attrs.group, track_id: item.attrs.track_id});
+            }
+          }, m.trust('&#9726;'))
+          , m('button.remove', {
+            onclick: function(e) {
+              audioSyncClient.send({cmd: "stopTrack", group: item.attrs.group, track_id: item.attrs.track_id});
+              audioSyncClient.send({cmd: "removeTrack", group: item.attrs.group, track_id: item.attrs.track_id});
+            }
+          }, 'X')
+        ]),
 	(audioSyncClient.mGroups[item.attrs.group].mode == M_EDIT ? 
           m('input[type=range]', {
             min: 1,

@@ -36,6 +36,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: black;
+  color: white;
+}
+
+h1 {
+  margin: 0;
+}
+
+.main.client {
+  display: flex;
 }
 
 .main.admin {
@@ -96,12 +106,14 @@ button:active {
   flex: 1;
   height: 100%;
   width: 100%;
+  overflow: auto;
 }
 
 .audioGroup > .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: bold;
 }
 
 .audioGroup .tracks {
@@ -109,7 +121,7 @@ button:active {
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
+  align-items: stretch;
   padding: 1vmin;
   flex: 1;
 }
@@ -121,6 +133,8 @@ button:active {
   flex-direction: row;
   padding: .25em;
   margin: 1vmin;
+  background: rgba(128, 128, 128, 0.25);
+  border-radius: .25em;
 }
 .audioGroup:before { /* type icon */
   position: absolute;
@@ -196,4 +210,17 @@ button:active {
 
 .playlist .tracks .track.playing {
   color: #ff00ff;
+}
+
+.track {
+  padding: .25em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.track .controls {
+}
+
+.track .controls button {
+  margin: 0 .25em;
 }
