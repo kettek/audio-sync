@@ -60,6 +60,7 @@ const audioSyncClient = (function() {
       // Automatically begin playback if there is a currently playing track
       if (msg.current_track && mGroups[msg.group].tracks[msg.current_track].player) {
         mGroups[msg.group].tracks[msg.current_track].player.resume(mGroups[msg.group].tracks[msg.current_track].player.player);
+        mGroups[msg.group].tracks[msg.current_track].isPlaying = true
       }
       console.log(mGroups[msg.group]);
     } else if (msg.cmd === 'removeGroup') {

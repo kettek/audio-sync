@@ -19,7 +19,17 @@ window.addEventListener('load', function(e) {
                 }
               })
             ])
-          ])
+          ]),
+          m('.playing', 'Now Playing: ', Object.keys(audioSyncClient.mGroups).map(key => {
+            let group = audioSyncClient.mGroups[key];
+
+            let trackIDs = Object.keys(group.tracks)
+            let playingTrackIDs = trackIDs.filter(trackID => group.tracks[trackID].isPlaying)
+            return m('.tracks', playingTrackIDs.map(trackID => {
+              let track = group.tracks[trackID]
+              return m('.track', track.title ? track.title : track.track)
+            }))
+          }))
         ] : [
           m('button', {
             onclick: function(e) {
